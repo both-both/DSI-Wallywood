@@ -1,7 +1,7 @@
 import dotenv from "dotenv";
 import express, { Request, Response } from "express";
-import { testRoutes } from "./routes/testRoutes.js";
 import { userRoutes } from "./routes/userRoutes.js";
+import { authRoutes } from "./routes/authRoutes.js";
 dotenv.config();
 
 // sætter port
@@ -18,6 +18,7 @@ app.get("/", (req: Request, res: Response) => {
 // Tilføjer routes til applikationen
 // anvender opdelte routes
 app.use("/users", userRoutes);
+app.use("/login", authRoutes);
 
 // 404 Error handling
 app.use((req: Request, res: Response) => {

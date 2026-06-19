@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-
+import bcrypt from "bcrypt";
 import { prisma } from "../prisma.js";
 
 class UserController {
@@ -55,14 +55,14 @@ class UserController {
         message: "firstname, lastname, email og password må ikke være tomme",
       });
     }
-    /*   const hashedPassword = await bcrypt.hash(password, 10) */
+    const hashedPassword = await bcrypt.hash(password, 10);
     try {
       const data = await prisma.user.create({
         data: {
           firstname: firstname,
           lastname: lastname,
           email: email,
-          password: password, // skal ændres til hashedPassword
+          password: hashedPassword,
           role: role,
           isActive: Boolean(JSON.parse(isActive)),
         },
@@ -84,7 +84,7 @@ class UserController {
           firstname: firstname,
           lastname: lastname,
           email: email,
-          password: password,
+          password: await bcrypt.hash(password, 10),
           isActive: Boolean(JSON.parse(isActive)),
         },
       });
