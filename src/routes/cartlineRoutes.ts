@@ -1,28 +1,28 @@
 import { Router } from "express";
-import { userController } from "../controller/userController.js";
+import { cartlineController } from "../controller/cartlineController.js";
 import { authController } from "../controller/authController.js";
 
 const routes = Router();
 
-routes.get("/", authController.authorize, userController.getRecords);
-routes.get("/:id", authController.authorize, userController.getRecord);
+routes.get("/", authController.authorize, cartlineController.getRecords);
+routes.get("/:id", authController.authorize, cartlineController.getRecord);
 routes.post(
   "/",
   authController.authorize,
   authController.requireAdmin,
-  userController.createRecord,
+  cartlineController.createRecord,
 );
 routes.put(
   "/:id",
   authController.authorize,
   authController.requireAdmin,
-  userController.updateRecord,
+  cartlineController.updateRecord,
 );
 routes.delete(
   "/:id",
   authController.authorize,
   authController.requireAdmin,
-  userController.deleteRecord,
+  cartlineController.deleteRecord,
 );
 
-export const userRoutes = routes;
+export const cartlineRoutes = routes;

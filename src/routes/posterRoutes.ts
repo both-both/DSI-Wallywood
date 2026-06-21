@@ -1,28 +1,28 @@
 import { Router } from "express";
-import { userController } from "../controller/userController.js";
+import { posterController } from "../controller/posterController.js";
 import { authController } from "../controller/authController.js";
 
 const routes = Router();
 
-routes.get("/", authController.authorize, userController.getRecords);
-routes.get("/:id", authController.authorize, userController.getRecord);
+routes.get("/", authController.authorize, posterController.getRecords);
+routes.get("/:id", authController.authorize, posterController.getRecord);
 routes.post(
   "/",
   authController.authorize,
   authController.requireAdmin,
-  userController.createRecord,
+  posterController.createRecord,
 );
 routes.put(
   "/:id",
   authController.authorize,
   authController.requireAdmin,
-  userController.updateRecord,
+  posterController.updateRecord,
 );
 routes.delete(
   "/:id",
   authController.authorize,
   authController.requireAdmin,
-  userController.deleteRecord,
+  posterController.deleteRecord,
 );
 
-export const userRoutes = routes;
+export const posterRoutes = routes;

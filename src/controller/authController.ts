@@ -15,7 +15,7 @@ interface JwtPayload {
 declare global {
   namespace Express {
     interface Request {
-      user?: { id: number };
+      user?: { id: number; role: string };
     }
   }
 }
@@ -51,9 +51,15 @@ class AuthController {
       });
     }
   };
+  requireAdmin = (req: Request, res: Response, next: NextFunction) => {
+    if (req.user?.role !== "ADMIN") {
+      return res.status(403).json({ message: "Kræver ADMIN-rolle" });
+    }
+    return next();
+  };
 
   generateToken = (
-    user: { id: number },
+    user: { id: number; role: string },
     type: "access" | "refresh", // definerer og det er en access eller refresh token
   ) => {
     // Henter secret key fra .env
@@ -75,6 +81,7 @@ class AuthController {
         exp,
         data: {
           id: user.id,
+          role: user.role,
         },
       },
       key,

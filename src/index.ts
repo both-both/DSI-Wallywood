@@ -2,6 +2,10 @@ import dotenv from "dotenv";
 import express, { Request, Response } from "express";
 import { userRoutes } from "./routes/userRoutes.js";
 import { authRoutes } from "./routes/authRoutes.js";
+import { posterRoutes } from "./routes/posterRoutes.js";
+import { genreRoutes } from "./routes/genreRoutes.js";
+import { cartlineRoutes } from "./routes/cartlineRoutes.js";
+import { userRatingRoutes } from "./routes/userRatingRoutes.js";
 dotenv.config();
 
 // sætter port
@@ -19,6 +23,10 @@ app.get("/", (req: Request, res: Response) => {
 // anvender opdelte routes
 app.use("/users", userRoutes);
 app.use("/login", authRoutes);
+app.use("/posters", posterRoutes);
+app.use("/genre", genreRoutes);
+app.use("/cartline", cartlineRoutes);
+app.use("/userRating", userRatingRoutes);
 
 // 404 Error handling
 app.use((req: Request, res: Response) => {
