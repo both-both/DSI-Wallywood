@@ -38,4 +38,20 @@ export const fieldTypes = {
     genreId: "number",
     posterId: "number",
   },
+
+  cartline: {
+    id: "number",
+    userId: "number",
+    posterId: "number",
+    quantity: "number",
+    createdAt: "date",
+  },
+
+  userRating: {
+    id: "number",
+    userId: "number",
+    posterId: "number",
+    numStars: "number",
+    createdAt: "date",
+  },
 } satisfies Record<string, FieldTypeMap>;
