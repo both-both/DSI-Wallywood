@@ -22,7 +22,7 @@ const order = [
   "cartline",
   "userRating",
   "genrePosterRel",
-];
+] as const;
 
 const main = async () => {
   try {
