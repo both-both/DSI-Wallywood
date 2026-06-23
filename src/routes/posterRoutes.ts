@@ -6,6 +6,7 @@ const routes = Router();
 
 routes.get("/", authController.authorize, posterController.getRecords);
 routes.get("/:id", authController.authorize, posterController.getRecord);
+
 routes.post(
   "/",
   authController.authorize,
