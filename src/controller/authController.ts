@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { prisma } from "../prisma.js";
+import { Role } from "../generated/prisma/enums.js";
 
 // Interface til JWT token data - placeres ovenover authController class deklarationen
 interface JwtPayload {
@@ -59,7 +60,7 @@ class AuthController {
   };
 
   generateToken = (
-    user: { id: number; role: string },
+    user: { id: number; role: Role },
     type: "access" | "refresh", // definerer og det er en access eller refresh token
   ) => {
     // Henter secret key fra .env
