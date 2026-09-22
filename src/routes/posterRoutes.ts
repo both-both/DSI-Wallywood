@@ -4,8 +4,8 @@ import { authController } from "../controller/authController.js";
 
 const routes = Router();
 
-routes.get("/", authController.authorize, posterController.getRecords);
-routes.get("/:id", authController.authorize, posterController.getRecord);
+routes.get("/", posterController.getRecords);
+routes.get("/:id", posterController.getRecord);
 
 routes.post(
   "/",

@@ -6,13 +6,19 @@ import { posterRoutes } from "./routes/posterRoutes.js";
 import { genreRoutes } from "./routes/genreRoutes.js";
 import { cartlineRoutes } from "./routes/cartlineRoutes.js";
 import { userRatingRoutes } from "./routes/userRatingRoutes.js";
+import cors from "cors";
+
 dotenv.config();
 
 // sætter port
 const port = process.env.PORT;
+
 // Opretter express objekt
 const app = express();
+app.use(cors());
+
 app.use(express.urlencoded({ extended: true }));
+
 // Gør det muligt at modtage JSON data
 app.use(express.json());
 

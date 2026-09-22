@@ -47,9 +47,9 @@ model poster {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  cartlines       Cartline[]
-  userRatings     userRating[]
-  genrePosterRels genrePosterRel[]
+  cartlines   Cartline[]
+  userRatings userRating[]
+  genres      genre[]
 
   @@map("posters") // Navn på tabel
 }
@@ -61,21 +61,21 @@ model genre {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  posters genrePosterRel[]
+  posters poster[]
 
   @@map("genres") // Navn på tabel
 }
 
-model genrePosterRel {
-  genreId  Int
-  posterId Int
-
-  genre  genre  @relation(fields: [genreId], references: [id])
-  poster poster @relation(fields: [posterId], references: [id])
-
-  @@id([genreId, posterId])
-  @@map("genrePosterRels") // Navn på tabel
-}
+/**
+ * model genrePosterRel {
+ * genreId  Int
+ * posterId Int
+ * genre  genre  @relation(fields: [genreId], references: [id])
+ * poster poster @relation(fields: [posterId], references: [id])
+ * @@id([genreId, posterId])
+ * @@map("genrePosterRels") // Navn på tabel
+ * }
+ */
 
 model userRating {
   id        Int      @id @default(autoincrement())

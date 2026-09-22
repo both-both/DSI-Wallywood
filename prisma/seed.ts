@@ -14,15 +14,9 @@ const __dirname = path.dirname(__filename);
 // leder i prisma/data
 const directory = path.join(__dirname, "csv");
 
-// Rækkefølgen er vigtig, fordi cartline/userRating/genrePosterRel har foreign keys til user, poster og genre
-const order = [
-  "user",
-  "poster",
-  "genre",
-  "cartline",
-  "userRating",
-  "genrePosterRel",
-] as const;
+// Rækkefølgen er vigtig, fordi cartline/userRating har foreign keys til user og poster
+// genrePosterRel seedes separat, da _genreToPoster er en implicit join-tabel uden Prisma-model
+const order = ["user", "poster", "genre", "cartline", "userRating"] as const;
 
 const main = async () => {
   try {
@@ -42,14 +36,30 @@ const main = async () => {
       await (prisma as any)[model].createMany({ data: cleanedData });
       console.log(`Seed completed`);
     }
+    await seedGenrePosterRel();
   } catch (error) {
     console.error(`Seed Failed: ${error}`);
     // Uanset hvad den laver, disconnecterne den efter trycatch
   } finally {
-    await prisma.$disconnect;
+    await prisma.$disconnect();
   }
 };
-const readCsv = async (model: SeedModelName) => {
+
+// Forbinder posters og genres via den implicitte join-tabel _genreToPoster
+const seedGenrePosterRel = async () => {
+  console.log("seeding genrePosterRel");
+  const rows = await readCsv("genrePosterRel");
+
+  for (const row of rows) {
+    await prisma.poster.update({
+      where: { id: Number(row.posterId) },
+      data: { genres: { connect: { id: Number(row.genreId) } } },
+    });
+  }
+  console.log(`Seed completed`);
+};
+
+const readCsv = async (model: SeedModelName | "genrePosterRel") => {
   const fullpath = path.join(directory, `${model}.csv`);
   const content = await readFile(fullpath, "utf-8");
 

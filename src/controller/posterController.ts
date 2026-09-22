@@ -3,27 +3,38 @@ import { prisma } from "../prisma.js";
 
 class PosterController {
   getRecords = async (req: Request, res: Response) => {
+    const { genreSlug, limit = 0 } = req.query;
     try {
+      // const data = await prisma.poster.findMany({
+      // });
       const data = await prisma.poster.findMany({
         select: {
           id: true,
           name: true,
           slug: true,
-          description: true,
-          image: true,
-          width: true,
-          height: true,
           price: true,
           stock: true,
           createdAt: true,
           updatedAt: true,
+          genres: {
+            select: { title: true },
+          },
         },
         orderBy: {
           id: "asc",
         },
+        where: genreSlug
+          ? { genres: { some: { slug: String(genreSlug) } } }
+          : undefined,
       });
+
+      const result =
+        Number(limit) > 0
+          ? data.sort(() => Math.random() - 0.5).slice(0, Number(limit))
+          : data;
+
       //returnerer data som JSON
-      return res.json(data);
+      return res.json(result);
     } catch (error) {
       console.error(`Fejl i API kald: ${error}`);
     }
@@ -86,15 +97,15 @@ class PosterController {
           height: Number(height),
           price: Number(price),
           stock: Number(stock),
-          genrePosterRels: genreIds
+          genres: genreIds
             ? {
-                create: genreIds.map((genreId: number) => ({
-                  genreId: Number(genreId),
+                connect: genreIds.map((genreId: number) => ({
+                  id: Number(genreId),
                 })),
               }
             : undefined,
         },
-        include: { genrePosterRels: { include: { genre: true } } },
+        include: { genres: true },
       });
       return res.status(201).json(data);
     } catch (error) {
@@ -128,16 +139,15 @@ class PosterController {
           height: Number(height),
           price: Number(price),
           stock: Number(stock),
-          genrePosterRels: genreIds
+          genres: genreIds
             ? {
-                deleteMany: {},
-                create: genreIds.map((genreId: number) => ({
-                  genreId: Number(genreId),
+                set: genreIds.map((genreId: number) => ({
+                  id: Number(genreId),
                 })),
               }
             : undefined,
         },
-        include: { genrePosterRels: { include: { genre: true } } },
+        include: { genres: true },
       });
       res.send(data);
     } catch (error) {
