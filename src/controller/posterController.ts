@@ -1,9 +1,18 @@
 import { Request, Response } from "express";
 import { prisma } from "../prisma.js";
 
+const shuffle = <T>(items: T[]) => {
+  const result = [...items];
+  for (let i = result.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [result[i], result[j]] = [result[j], result[i]];
+  }
+  return result;
+};
+
 class PosterController {
   getRecords = async (req: Request, res: Response) => {
-    const { genreSlug, limit = 0 } = req.query;
+    const { genreSlug, limit = 0, random } = req.query;
     try {
       // const data = await prisma.poster.findMany({
       // });
@@ -16,6 +25,7 @@ class PosterController {
           stock: true,
           createdAt: true,
           updatedAt: true,
+          image: true,
           genres: {
             select: { title: true },
           },
@@ -28,10 +38,10 @@ class PosterController {
           : undefined,
       });
 
+      const shuffled = random === "true" ? shuffle(data) : data;
+
       const result =
-        Number(limit) > 0
-          ? data.sort(() => Math.random() - 0.5).slice(0, Number(limit))
-          : data;
+        Number(limit) > 0 ? shuffled.slice(0, Number(limit)) : shuffled;
 
       //returnerer data som JSON
       return res.json(result);
