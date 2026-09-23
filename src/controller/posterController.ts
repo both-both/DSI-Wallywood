@@ -26,6 +26,7 @@ class PosterController {
           createdAt: true,
           updatedAt: true,
           image: true,
+          description: true,
           genres: {
             select: { title: true },
           },
