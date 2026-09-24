@@ -3,25 +3,28 @@ import { prisma } from "../prisma.js";
 
 class CartlineController {
   getRecords = async (req: Request, res: Response) => {
+    const { userId } = req.query;
     try {
       const data = await prisma.cartline.findMany({
+        where: userId ? { userId: Number(userId) } : undefined,
         select: {
           id: true,
           userId: true,
           posterId: true,
           quantity: true,
           createdAt: true,
+          poster: {
+            select: { name: true, image: true, price: true, slug: true },
+          },
         },
-        orderBy: {
-          id: "asc",
-        },
+        orderBy: { id: "asc" },
       });
-      //returnerer data som JSON
       return res.json(data);
     } catch (error) {
       console.error(`Fejl i API kald: ${error}`);
     }
   };
+
   getRecord = async (req: Request, res: Response) => {
     const { id } = req.params;
     try {
